@@ -21,6 +21,7 @@ bool gLedstate = LOW;
 
 const char version[] = "MESH_YARD_MONITOR_v0.0.1";
 elapsedMillis timeElapsed;
+elapsedMillis timeElapsed2;
 // setup() runs once, when the device is first turned on.
 
 void ProcessNodes(const char *event, const char *data)

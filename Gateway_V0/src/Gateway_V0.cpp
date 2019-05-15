@@ -1,5 +1,5 @@
 #include "application.h"
-#line 1 "e:/03_Engineering/01_Software/03_Yardmonitor/GATEWAY_V0/Gateway_V0/src/Gateway_V0.ino"
+#line 1 "c:/Users/jasonma.Vecima/Documents/particle/boron/GATEWAY_V0/Gateway_V0/src/Gateway_V0.ino"
 /*
  * Project Gateway_V0
  * Description:
@@ -11,7 +11,7 @@
 void ProcessNodes(const char *event, const char *data);
 void setup();
 void loop();
-#line 9 "e:/03_Engineering/01_Software/03_Yardmonitor/GATEWAY_V0/Gateway_V0/src/Gateway_V0.ino"
+#line 9 "c:/Users/jasonma.Vecima/Documents/particle/boron/GATEWAY_V0/Gateway_V0/src/Gateway_V0.ino"
 SYSTEM_THREAD(ENABLED);
 //SYSTEM_MODE(SEMI_AUTOMATIC);
 //SYSTEM_MODE(MANUAL);
@@ -27,6 +27,7 @@ bool gLedstate = LOW;
 
 const char version[] = "MESH_YARD_MONITOR_v0.0.1";
 elapsedMillis timeElapsed;
+elapsedMillis timeElapsed2;
 // setup() runs once, when the device is first turned on.
 
 void ProcessNodes(const char *event, const char *data)
