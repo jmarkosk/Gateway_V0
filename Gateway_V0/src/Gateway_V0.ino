@@ -4,7 +4,7 @@
  * Author:
  * Date:
  */
-//#include "elapsedMillis.h"
+#include "elapsedMillis.h"
 
 SYSTEM_THREAD(ENABLED);
 //SYSTEM_MODE(SEMI_AUTOMATIC);
@@ -24,8 +24,9 @@ const char version[] = "MESH_YARD_MONITOR_v0.0.1";
 #define  MAX_MESH_NODES 2
 #define  MAX_MESH_DATA 32
 uint8_t gNumberofNodes = 2;
-char    gNodeID[MAX_MESH_NODES][4];
+char gNodeID[MAX_MESH_NODES][4];
 char gNodesDATA[MAX_MESH_NODES][MAX_MESH_DATA];
+uint8_t gNodeCount = 0;
 
 
 
@@ -64,7 +65,7 @@ void setup() {
     pinMode(MESH_STATS_LED, OUTPUT);
     
     Mesh.subscribe("Recieved_Nodes", ProcessNodes);
-
+    Mesh.subscribe("NodeID", ProcessNodeID);
     //Mesh.publish("GET_Nodes");
     
 
@@ -73,6 +74,7 @@ void setup() {
 }
 
 void ProcessNodes(const char *, const char *);
+void ProcessNodeID(const char *, const char *);
 
 // loop() runs over and over again, as quickly as it can execute.
 void loop() {
@@ -98,6 +100,9 @@ void loop() {
 
 
   if(heartbeat2 && heartbeat_blocking2){
+    
+    int8_t i;
+
     heartbeat_blocking2 = 0;
     gLedstate2 = !gLedstate2;   
     digitalWrite(MESH_STATS_LED,gLedstate2);
@@ -105,8 +110,16 @@ void loop() {
     heartbeat2 = 0;
     Serial.printlnf("GATEWAY: Sending <<<GET NODE>>> request");
     Mesh.publish("GET_Nodes");
-  }
 
+    for(i = 0; i<= gNodeCount; i++){
+      if(strcmp(gNodeID[i],"") == 0){
+        Serial.printlnf("Empty Node list!!!");
+        return;
+      }
+      Serial.printlnf("NODE: %d, ID: %s",i,gNodeID[i]);
+    }  
+
+  }  
     if(heartbeat && heartbeat_blocking){
     heartbeat_blocking = 0;
     gLedstate = !gLedstate;
@@ -118,7 +131,34 @@ void loop() {
 
 }
 
+
 void ProcessNodes(const char *event, const char *data)
 {
   Serial.printlnf("event=%s data=%s", event, data ? data : "NULL");
+
+}
+
+
+//Gets ENDNODE count and NODE ID
+void ProcessNodeID(const char *event, const char *data)
+{
+  int8_t i;
+  Serial.printlnf("event=%s data=%s", event, data ? data : "NULL");
+
+  for(i = 0; i<= gNodeCount; i++)
+  {
+     if(strcmp(data, gNodeID[i]) == 0)  //if the nodeid is alread recorded, exit
+     {
+        return;
+     }
+     else
+     {
+       /* code */
+       strcpy(gNodeID[i], data);
+       gNodeCount++;
+     }   
+     
+
+  }
+
 }
